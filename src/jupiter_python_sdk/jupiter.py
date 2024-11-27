@@ -649,7 +649,8 @@ class Jupiter():
         as_legacy_transaction: bool=False,
         exclude_dexes: list=None,
         max_accounts: int=None,
-        platform_fee_bps: int=None
+        platform_fee_bps: int=None,
+        dynamic_compute_limit: bool=False
     ) -> str:
         """Perform a swap.
         
@@ -667,7 +668,8 @@ class Jupiter():
                 ``as_legacy_transaction (bool)``: Default is False. Instead of using versioned transaction, this will use the legacy transaction.\n
                 ``exclude_dexes (list)``: Default is that all DEXes are included. You can pass in the DEXes that you want to exclude in a list. For example, ['Aldrin','Saber'].\n
                 ``max_accounts (int)``: Find a route given a maximum number of accounts involved, this might dangerously limit routing ending up giving a bad price. The max is an estimation and not the exact count.\n
-                ``platform_fee_bps (int)``: If you want to charge the user a fee, you can specify the fee in BPS. Fee % is taken out of the output token.
+                ``platform_fee_bps (int)``: If you want to charge the user a fee, you can specify the fee in BPS. Fee % is taken out of the output token.\n
+                ``dynamic_compute_limit (bool)``: Enable dynamic compute limit for the transaction. Default is False.
         
         Returns:
             ``str``: returns serialized transactions to perform the swap from https://quote-api.jup.ag/v6/swap
@@ -701,7 +703,8 @@ class Jupiter():
         transaction_parameters = {
             "quoteResponse": quoteResponse,
             "userPublicKey": self.keypair.pubkey().__str__(),
-            "wrapAndUnwrapSol": wrap_unwrap_sol
+            "wrapAndUnwrapSol": wrap_unwrap_sol,
+            "dynamicComputeUnitLimit": dynamic_compute_limit
         }
         if prioritization_fee_lamports:
             transaction_parameters.update({"prioritizationFeeLamports": prioritization_fee_lamports})
